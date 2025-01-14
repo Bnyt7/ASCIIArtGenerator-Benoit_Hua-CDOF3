@@ -1,2 +1,2 @@
-# ASCIIArtGenerator-Benoit_Hua-OCC2
-Provide simple text to the program and watch it output beautiful ASCII art that represent your text
+# Quiz-game-Benoit_Hua-CDOF3
+The player answers a number of questions to try and win the game
