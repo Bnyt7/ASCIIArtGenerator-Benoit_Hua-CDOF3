@@ -1,3 +1,5 @@
+#API : Open Trivia Database https://opentdb.com/ (free to use database, no API key required)
+
 import requests
 import json
 import random
@@ -29,13 +31,18 @@ difficulties = [item["difficulty"].upper() for item in results]
 
 #print("Difficulties:", difficulties)
 
+"""
+Print the question n°(number)'s information.
+"""
 def question(number, categories,questions,correct_answers,incorrect_answers,difficulties):
     print("Question number "+str(number+1))
     print(categories[number])
     print(difficulties[number])
     print(questions[number])
 
-
+"""
+Shuffle the order of the answers array (so that the first won't always be the correct one)
+"""
 def shuffleAnswers(number, correct_answers, incorrect_answers):
     answers = []
     answers.append(correct_answers[number])
@@ -44,6 +51,9 @@ def shuffleAnswers(number, correct_answers, incorrect_answers):
     random.shuffle(answers)
     return answers
 
+"""
+Show the questions
+"""
 def showQuestions(answers):
     letters = ["a","b","c","d"]
     for i in range (len(answers)):
@@ -90,4 +100,4 @@ for i in range (amount):
         print("Wrong, the correct answer was "+correct_answers[i]+ "\n")
     
     print("========================================================================================================")
-print("There are no longer questions. You got "+points +" points")
+print("There are no longer questions. You got "+str(points) +" points")
