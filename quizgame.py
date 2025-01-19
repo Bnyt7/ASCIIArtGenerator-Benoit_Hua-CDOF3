@@ -104,3 +104,5 @@ for i in range (amount):
     
     print("========================================================================================================")
 print("There are no longer questions. You got "+str(points) +" points")
+
+#implement here the timer
