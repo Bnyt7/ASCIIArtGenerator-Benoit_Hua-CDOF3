@@ -14,7 +14,7 @@ data = response.json()
 results = data["results"]
 
 # Extract arrays
-categories = [item["category"] for item in results]
+categories = [html.unescape(item["category"]) for item in results]
 questions = [html.unescape(item["question"]) for item in results]
 correct_answers = [html.unescape(item["correct_answer"]) for item in results]
 incorrect_answers = [html.unescape(item["incorrect_answers"]) for item in results]
@@ -31,19 +31,21 @@ difficulties = [item["difficulty"].upper() for item in results]
 
 #print("Difficulties:", difficulties)
 
-"""
-Print the question n°(number)'s information.
-"""
+
 def question(number, categories,questions,correct_answers,incorrect_answers,difficulties):
-    print("Question number "+str(number+1))
+    """
+    Print the question n°(number)'s information.
+    """
+    print("Question "+str(number+1))
     print(categories[number])
     print(difficulties[number])
     print(questions[number])
 
-"""
-Shuffle the order of the answers array (so that the first won't always be the correct one)
-"""
+
 def shuffleAnswers(number, correct_answers, incorrect_answers):
+    """
+    Shuffle the order of the answers array (so that the first won't always be the correct one)
+    """
     answers = []
     answers.append(correct_answers[number])
     for i in incorrect_answers[number]:
@@ -51,13 +53,14 @@ def shuffleAnswers(number, correct_answers, incorrect_answers):
     random.shuffle(answers)
     return answers
 
-"""
-Show the questions
-"""
+
 def showQuestions(answers):
+    """
+    Show the questions
+    """
     letters = ["a","b","c","d"]
     for i in range (len(answers)):
-        print(letters[i]+": "+answers[i])
+        print(letters[i]+": "+html.unescape(answers[i]))
 
 #Choose a letter => Choose a value in the answers array
 # a=0,b=1,c=2,d=3
