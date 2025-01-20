@@ -4,11 +4,12 @@ import requests
 import json
 import random
 import html
+import time  # Importer le module time pour le timer
 
 amount = 10
-difficulty = ["easy","medium","hard"]
+difficulty = ["easy", "medium", "hard"]
 
-response = requests.get("https://opentdb.com/api.php?amount="+str(amount)+"&difficulty="+difficulty[0]+"&type=multiple")
+response = requests.get("https://opentdb.com/api.php?amount=" + str(amount) + "&difficulty=" + difficulty[0] + "&type=multiple")
 
 data = response.json()
 results = data["results"]
@@ -21,22 +22,22 @@ incorrect_answers = [html.unescape(item["incorrect_answers"]) for item in result
 difficulties = [item["difficulty"].upper() for item in results]
 
 # Display arrays
-#print("Categories:", categories)
+# print("Categories:", categories)
 
-#print("Questions:", questions)
+# print("Questions:", questions)
 
-#print("Correct Answers:", correct_answers)
+# print("Correct Answers:", correct_answers)
 
-#print("Incorrect Answers:", incorrect_answers)
+# print("Incorrect Answers:", incorrect_answers)
 
-#print("Difficulties:", difficulties)
+# print("Difficulties:", difficulties)
 
 
-def question(number, categories,questions,correct_answers,incorrect_answers,difficulties):
+def question(number, categories, questions, correct_answers, incorrect_answers, difficulties):
     """
     Print the question n°(number)'s information.
     """
-    print("Question "+str(number+1))
+    print("Question " + str(number + 1))
     print(categories[number])
     print(difficulties[number])
     print(questions[number])
@@ -56,53 +57,67 @@ def shuffleAnswers(number, correct_answers, incorrect_answers):
 
 def showQuestions(answers):
     """
-    Show the questions
+    Show the questions and answers
     """
-    letters = ["a","b","c","d"]
-    for i in range (len(answers)):
-        print(letters[i]+": "+html.unescape(answers[i]))
+    letters = ["a", "b", "c", "d"]
+    for i in range(len(answers)):
+        print(letters[i] + ": " + html.unescape(answers[i]))
 
-#Choose a letter => Choose a value in the answers array
+
+# Choose a letter => Choose a value in the answers array
 # a=0,b=1,c=2,d=3
-#"input" is a number 
+# "input" is a number
 # number is the nth question
 def verif(number, correct_answers, incorrect_answers, answers, choice):
     correct = False
 
-    if(answers[choice]==correct_answers[number]):
+    if (answers[choice] == correct_answers[number]):
         correct = True
     return correct
 
 
 points = 0
-for i in range (amount):
-
-    print("Points : "+str(points) + "\n")
-    question(i,categories,questions,correct_answers,incorrect_answers,difficulties)
+for i in range(amount):
+    print("Points : " + str(points) + "\n")
+    question(i, categories, questions, correct_answers, incorrect_answers, difficulties)
     print("\n")
-    answ = shuffleAnswers(i,correct_answers,incorrect_answers)
+    answ = shuffleAnswers(i, correct_answers, incorrect_answers)
     showQuestions(answ)
     print("\n")
-    playerChoice = input("Your choice (type a letter)>")
-    if(playerChoice!='a' and playerChoice!='b' and playerChoice!='c' and playerChoice!='d'):
-        while(playerChoice!='a' and playerChoice!='b' and playerChoice!='c' and playerChoice!='d'):
-            print("Wrong input, try again.")
-            playerChoice = input("Your choice (type a letter)>")
+    
+    # Timer start
+    start_time = time.time()
+    time_limit = 30  # Set time limit for the question in seconds
+    
+    playerChoice = None
+    while playerChoice not in ['a', 'b', 'c', 'd']:
+        remaining_time = time_limit - (time.time() - start_time)
+        if remaining_time <= 0:
+            print("Time's up! You didn't answer in time.")
+            playerChoice = 'time_up'  # For time-out scenario
+            break
+        print(f"Time: {int(remaining_time)} seconds")
+        playerChoice = input("Your choice (type a letter)> ")
+    
+    # If time is up, no points awarded
+    if playerChoice == 'time_up':
+        print("You missed the question. No points awarded.\n")
+        print("========================================================================================================")
+        continue
+    
     choiceValue = 0
-    if(playerChoice=='b'):
+    if (playerChoice == 'b'):
         choiceValue = 1
-    elif(playerChoice=='c'):
+    elif (playerChoice == 'c'):
         choiceValue = 2
-    elif(playerChoice=='d'):
+    elif (playerChoice == 'd'):
         choiceValue = 3
-    
-    if(verif(i, correct_answers,incorrect_answers,answ,choiceValue)):
-        print("Correct !\n")
-        points+=1
-    else:
-        print("Wrong, the correct answer was "+correct_answers[i]+ "\n")
-    
-    print("========================================================================================================")
-print("There are no longer questions. You got "+str(points) +" points")
 
-#implement here the timer
+    if verif(i, correct_answers, incorrect_answers, answ, choiceValue):
+        print("Correct !\n")
+        points += 1
+    else:
+        print("Wrong, the correct answer was " + correct_answers[i] + "\n")
+
+    print("========================================================================================================")
+print("There are no longer questions. You got " + str(points) + " points")
