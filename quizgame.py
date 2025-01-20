@@ -13,14 +13,14 @@ response = requests.get("https://opentdb.com/api.php?amount="+str(amount)+"&diff
 data = response.json()
 results = data["results"]
 
-# Extract arrays
+# Extract arrays  
 categories = [html.unescape(item["category"]) for item in results]
 questions = [html.unescape(item["question"]) for item in results]
 correct_answers = [html.unescape(item["correct_answer"]) for item in results]
 incorrect_answers = [html.unescape(item["incorrect_answers"]) for item in results]
 difficulties = [item["difficulty"].upper() for item in results]
 
-# Display arrays
+# Display arrays   
 #print("Categories:", categories)
 
 #print("Questions:", questions)
@@ -104,3 +104,4 @@ for i in range (amount):
     
     print("========================================================================================================")
 print("There are no longer questions. You got "+str(points) +" points")
+
